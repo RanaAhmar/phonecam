@@ -1,0 +1,58 @@
+name: PhoneCam
+options:
+  bundleIdPrefix: com.phonecam.app
+  deploymentTarget:
+    macOS: "12.3"
+  xcodeVersion: "16"
+
+targets:
+  PhoneCam:
+    type: application
+    platform: macOS
+    deploymentTarget: "12.3"
+    sources:
+      - path: DroidCam
+        excludes:
+          - "**/*.plist"
+          - "**/*.entitlements"
+    info:
+      path: DroidCam/Info.plist
+      properties:
+        CFBundleDisplayName: PhoneCam
+        CFBundleIdentifier: com.phonecam.app
+        CFBundleName: PhoneCam
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSMinimumSystemVersion: "12.3"
+        LSUIElement: true
+        NSCameraUsageDescription: "PhoneCam needs camera access to provide the virtual camera to other apps."
+        NSLocalNetworkUsageDescription: "PhoneCam needs local network access to discover and connect to Android devices."
+        NSBonjourServices:
+          - _phonecam._tcp
+        NSPrincipalClass: NSApplication
+        NSSupportsAutomaticTermination: false
+        NSSupportsSuddenTermination: false
+    entitlements:
+      path: DroidCam/DroidCam.entitlements
+    settings:
+      PRODUCT_NAME: PhoneCam
+      PRODUCT_BUNDLE_IDENTIFIER: com.phonecam.app
+      SWIFT_VERSION: "5.9"
+      MACOSX_DEPLOYMENT_TARGET: "12.3"
+      CODE_SIGN_STYLE: Automatic
+      ENABLE_HARDENED_RUNTIME: YES
+    dependencies:
+      - framework: CoreMediaIO.framework
+        weak: false
+      - framework: CoreMedia.framework
+        weak: false
+      - framework: CoreVideo.framework
+        weak: false
+      - framework: VideoToolbox.framework
+        weak: false
+      - framework: AVFoundation.framework
+        weak: false
+      - framework: IOKit.framework
+        weak: false
+      - framework: Network.framework
+        weak: false
