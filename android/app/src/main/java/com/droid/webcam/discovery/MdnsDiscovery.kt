@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 class MdnsDiscovery(private val context: Context) {
 
     private val TAG = "MdnsDiscovery"
-    private val SERVICE_TYPE = "_droidcam._tcp."
+    private val SERVICE_TYPE = "_phonecam._tcp."
     private val SERVICE_NAME = "DroidCamera"
 
     private var nsdManager: NsdManager? = null

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Droid Camera</string>
+    <string name="app_name">PhoneCam</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="settings">Settings</string>

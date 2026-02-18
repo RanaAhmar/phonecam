@@ -6,9 +6,9 @@ import Network
 /// and browses for Android devices that have registered the same service type.
 class BonjourDiscovery: NSObject {
 
-    private let serviceType = "_droidcam._tcp"
+    private let serviceType = "_phonecam._tcp"
     private let serviceDomain = "local."
-    private let serviceName = "DroidCamera-Mac"
+    private let serviceName = "PhoneCam-Mac"
 
     // Publishing (so Android can find us)
     private var publishedService: NetService?

@@ -27,9 +27,9 @@ class VirtualCameraDriver {
     private var isRunning = false
 
     // Camera properties
-    let deviceName = "Droid Camera"
-    let deviceModelID = "com.droid.webcam.camera"
-    let deviceUID = "DroidCamera-Virtual-001"
+    let deviceName = "PhoneCam"
+    let deviceModelID = "com.phonecam.app.camera"
+    let deviceUID = "PhoneCam-Virtual-001"
 
     // Stream format — 1080p/60fps, 32BGRA
     private let width = 1920
