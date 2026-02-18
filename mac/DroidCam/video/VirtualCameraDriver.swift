@@ -314,5 +314,5 @@ class DroidCameraProviderSource: NSObject, CMIOExtensionProviderSource {
 
     func connect(to client: CMIOExtensionClient) throws {}
 
-    func disconnect(client: CMIOExtensionClient) {}
+    func disconnect(from client: CMIOExtensionClient) {}
 }
