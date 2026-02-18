@@ -197,10 +197,10 @@ class DroidCameraStreamSource: NSObject, CMIOExtensionStreamSource {
 
         guard let sampleBuffer = sbuf else { return }
 
-        // Attach sequence number
+        // Attach sequence number using string key
         CMSetAttachment(
             sampleBuffer,
-            key: CMIOSampleBufferAttachmentKey_SequenceNumber,
+            key: "SequenceNumber" as CFString,
             value: NSNumber(value: seqNum),
             attachmentMode: kCMAttachmentMode_ShouldPropagate
         )
@@ -291,7 +291,8 @@ class DroidCameraDeviceSource: NSObject, CMIOExtensionDeviceSource {
     func deviceProperties(forProperties properties: Set<CMIOExtensionProperty>) throws -> CMIOExtensionDeviceProperties {
         let props = CMIOExtensionDeviceProperties(dictionary: [:])
         if properties.contains(.deviceTransportType) {
-            props.transportType = Int32(kIOAudioDeviceTransportTypeVirtual)
+            // 0x76697274 = 'virt' — virtual transport type
+            props.transportType = Int(0x76697274)
         }
         return props
     }
@@ -310,4 +311,8 @@ class DroidCameraProviderSource: NSObject, CMIOExtensionProviderSource {
     }
 
     func setProviderProperties(_ providerProperties: CMIOExtensionProviderProperties) throws {}
+
+    func connect(to client: CMIOExtensionClient) throws {}
+
+    func disconnect(client: CMIOExtensionClient) {}
 }

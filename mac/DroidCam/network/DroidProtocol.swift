@@ -87,11 +87,11 @@ extension Data {
 
     mutating func appendUInt32BE(_ value: UInt32) {
         var v = value.bigEndian
-        withUnsafeBytes(of: &v) { append(contentsOf: $0) }
+        Swift.withUnsafeBytes(of: &v) { append(contentsOf: $0) }
     }
 
     mutating func appendInt64BE(_ value: Int64) {
         var v = value.bigEndian
-        withUnsafeBytes(of: &v) { append(contentsOf: $0) }
+        Swift.withUnsafeBytes(of: &v) { append(contentsOf: $0) }
     }
 }
