@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Droid Camera</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="settings">Settings</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="connect_usb">Connect via USB</string>
+    <string name="no_devices">Searching for Mac computers on your network…</string>
+    <string name="status_connected_wifi">Connected via WiFi</string>
+    <string name="status_connected_usb">Connected via USB</string>
+    <string name="status_disconnected">Not connected</string>
+    <string name="streaming_live_wifi">🔴 Live — WiFi</string>
+    <string name="streaming_live_usb">🔴 Live — USB</string>
+    <string name="not_streaming">Not streaming</string>
+    <string name="notification_channel_name">Streaming</string>
+    <string name="notification_ready">Ready to stream</string>
+
+    <!-- Resolution entries -->
+    <string-array name="resolution_entries">
+        <item>720p (1280×720)</item>
+        <item>1080p (1920×1080) — Default</item>
+        <item>4K (3840×2160)</item>
+    </string-array>
+    <string-array name="resolution_values">
+        <item>720p</item>
+        <item>1080p</item>
+        <item>4K</item>
+    </string-array>
+
+    <!-- FPS entries -->
+    <string-array name="fps_entries">
+        <item>15 fps</item>
+        <item>30 fps</item>
+        <item>60 fps — Default</item>
+    </string-array>
+    <string-array name="fps_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+</resources>

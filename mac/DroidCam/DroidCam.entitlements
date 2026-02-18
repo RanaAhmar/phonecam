@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Required for CoreMediaIO virtual camera (System Extension) -->
+    <key>com.apple.developer.system-extension.install</key>
+    <true/>
+
+    <!-- Required for CMIOExtension virtual camera -->
+    <key>com.apple.developer.avfoundation.multitasking-camera-access</key>
+    <true/>
+
+    <!-- Network access for WiFi streaming -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    <key>com.apple.security.network.server</key>
+    <true/>
+
+    <!-- Camera access (to provide to other apps) -->
+    <key>com.apple.security.device.camera</key>
+    <true/>
+
+    <!-- Hardened runtime — required for notarization -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <false/>
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <false/>
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <false/>
+</dict>
+</plist>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="Video">
+
+        <ListPreference
+            android:key="resolution"
+            android:title="Resolution"
+            android:summary="%s"
+            android:defaultValue="1080p"
+            android:entries="@array/resolution_entries"
+            android:entryValues="@array/resolution_values" />
+
+        <ListPreference
+            android:key="frame_rate"
+            android:title="Frame Rate"
+            android:summary="%s fps"
+            android:defaultValue="60"
+            android:entries="@array/fps_entries"
+            android:entryValues="@array/fps_values" />
+
+        <SeekBarPreference
+            android:key="bitrate"
+            android:title="Bitrate (Mbps)"
+            android:defaultValue="8"
+            android:min="2"
+            android:max="25"
+            app:showSeekBarValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Display">
+
+        <SwitchPreferenceCompat
+            android:key="keep_screen_on"
+            android:title="Keep Screen On"
+            android:summary="Prevent screen from sleeping while streaming"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+
+        <Preference
+            android:key="version"
+            android:title="Version"
+            android:summary="1.0.0" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,470 @@
+# Phone as Webcam App - Product Requirements Document
+
+## Executive Summary
+
+Build a cross-platform application that enables Android phones to function as wireless webcams for Mac computers. The system consists of two components: an Android mobile app that captures and streams video, and a Mac desktop app that receives the stream and presents it as a virtual webcam device.
+
+## Product Overview
+
+### Core Value Proposition
+Transform any Android phone into a high-quality wireless webcam for Mac, eliminating the need for dedicated webcam hardware and leveraging superior phone camera quality.
+
+### Target Users
+- Remote workers and professionals conducting video calls
+- Content creators and streamers
+- Anyone needing better video quality than built-in Mac webcams
+- Users wanting flexible camera positioning
+
+## Technical Architecture
+
+### System Components
+
+#### 1. Android Mobile App
+- **Purpose**: Capture video from phone camera and stream to Mac
+- **Technology Stack**: Native Android (Kotlin/Java)
+- **Key Responsibilities**:
+  - Camera capture and encoding
+  - Network streaming
+  - Connection management
+  - Settings UI
+
+#### 2. Mac Desktop App
+- **Purpose**: Receive video stream and create virtual webcam device
+- **Technology Stack**: Native macOS (Swift)
+- **Key Responsibilities**:
+  - Network discovery and connection
+  - Video decoding and processing
+  - Virtual camera driver installation
+  - System integration
+
+### Connection Architecture
+- **Discovery**: Local network discovery using mDNS/Bonjour + USB device detection
+- **Transport**: 
+  - WiFi: TCP/UDP for video streaming
+  - USB: ADB (Android Debug Bridge) for direct device communication
+- **Encoding**: H.264/H.265 for efficient streaming
+- **Latency Target**: 
+  - USB: <30ms end-to-end
+  - WiFi: <100ms end-to-end
+
+## Core Features (MVP)
+
+### 1. Device Discovery & Pairing
+
+#### Android App
+- Auto-discover Mac devices on same WiFi network
+- Display list of available Mac computers
+- Show connection status (connected/disconnected)
+- Manual IP address entry option
+
+#### Mac App
+- Auto-discover Android devices on network
+- Display list of available phones
+- Show connection status with visual indicator
+- Accept/reject connection requests
+
+### 2. Video Streaming
+
+#### Android App
+- Camera selection (front/rear)
+- Resolution options:
+  - 720p (1280x720)
+  - 1080p (1920x1080) - **Default**
+  - 4K (3840x2160) - if supported
+- Frame rate selection: 15fps, 30fps, 60fps (**60fps default**)
+- Auto-focus and exposure control
+- Orientation lock (portrait/landscape)
+
+#### Mac App
+- Display live video preview
+- Video quality settings sync with phone
+- Rotation controls (0°, 90°, 180°, 270°)
+- Mirror/flip options
+
+### 3. Virtual Camera Integration & OBS Support
+
+#### Mac Implementation
+- Create virtual camera device visible to all apps
+- Device name: "[Your App Name] Camera"
+- Compatibility with:
+  - **OBS Studio** (Primary use case)
+  - Zoom
+  - Google Meet
+  - Microsoft Teams
+  - Slack
+  - FaceTime
+  - Any app using standard macOS camera APIs
+
+#### OBS-Specific Optimizations
+- **High-quality video source**: Minimal compression for best quality in OBS
+- **Low-latency mode**: Optimized for live streaming scenarios
+- **Color space support**: Full RGB color space for accurate colors
+- **Resolution consistency**: No automatic downscaling - OBS handles scaling
+- **Frame timing**: Consistent frame delivery for smooth streaming
+- **Audio sync**: Proper timestamp synchronization (future audio feature)
+
+#### OBS Integration Features
+- Appears as standard Video Capture Device in OBS
+- Supports OBS Studio filters and effects
+- Compatible with OBS virtual camera output
+- No performance overhead when used with OBS
+- Maintains 60fps for smooth streaming
+
+### 4. Network Management
+
+#### Connection Types
+- **USB Wired (Primary)**: Zero latency, unlimited bandwidth, stable connection
+  - Uses ADB (Android Debug Bridge) protocol
+  - Automatic detection when phone plugged in
+  - No network configuration needed
+  - Highest quality streaming without compression artifacts
+- **WiFi (Alternative)**: Wireless convenience with good quality
+  - Low latency when on good network
+  - Requires same WiFi network
+- **Mobile Hotspot**: Direct connection without router
+
+#### Connection Features
+- Automatic USB detection and prioritization
+- Automatic reconnection on network issues
+- Connection quality indicator (USB/WiFi/Signal strength)
+- Bandwidth usage monitoring
+- Fallback from WiFi to USB prompt if quality degrades
+- Seamless switching between connection types
+
+### 5. User Interface
+
+#### Android App
+- **Home Screen**:
+  - Large "Connect" button
+  - List of discovered Mac devices
+  - Connection status banner
+  - Settings access
+- **Camera View (Connected)**:
+  - Live camera preview
+  - Camera flip button
+  - Resolution selector
+  - Disconnect button
+  - Settings gear icon
+- **Settings**:
+  - Resolution presets
+  - Frame rate selection
+  - Video quality/bitrate
+  - Audio streaming toggle (future)
+  - Keep screen on toggle
+  - About/Help
+
+#### Mac App
+- **Menu Bar Integration**:
+  - Quick access from menu bar icon
+  - Connection status indicator
+  - Quick disconnect
+- **Main Window**:
+  - Video preview
+  - Device selection dropdown
+  - Connection status
+  - Settings access
+  - Start/Stop virtual camera
+- **Settings**:
+  - Default resolution
+  - Video adjustments (brightness, contrast)
+  - Startup options
+  - About/Help
+
+## Technical Requirements
+
+### Android App Requirements
+
+#### Minimum Specifications
+- Android 8.0 (API Level 26) or higher
+- Camera2 API support
+- WiFi connectivity
+- Minimum 2GB RAM
+
+#### Permissions Required
+- Camera
+- Internet/Network access (for WiFi mode)
+- USB debugging (for wired mode)
+- Wake lock (keep screen on)
+
+#### Key Libraries/APIs
+- Camera2 API for camera access
+- MediaCodec for H.264 encoding
+- Network Service Discovery (NSD) for mDNS (WiFi mode)
+- Socket programming for streaming (WiFi mode)
+- USB accessory APIs for wired connection
+
+### Mac App Requirements
+
+#### Minimum Specifications
+- macOS 11.0 (Big Sur) or higher
+- Apple Silicon or Intel processors
+- 4GB RAM minimum
+
+#### Permissions Required
+- Camera (to be provided to other apps)
+- Network access
+- System Extension (for virtual camera driver)
+
+#### Key Technologies
+- CoreMediaIO framework for virtual camera
+- AVFoundation for video processing
+- VideoToolbox for decoding
+- Bonjour for service discovery (WiFi mode)
+- IOKit/USB frameworks for USB device communication
+- ADB integration for wired connection
+
+### Performance Requirements
+
+- **Latency**: 
+  - USB: Maximum 30ms (target 15ms) - Critical for OBS streaming
+  - WiFi: Maximum 100ms (target 50ms)
+- **Frame Rate**: Solid 60fps at 1080p (no dropped frames)
+- **CPU Usage**: 
+  - Android: <30% during streaming
+  - Mac: <15% during reception (important for OBS performance)
+- **Battery**: 
+  - USB: No battery drain (phone charges while connected)
+  - WiFi: <20% drain per hour
+- **Network**: 
+  - WiFi: Minimum 10 Mbps for 1080p/60fps
+  - USB: No bandwidth limitations
+
+### OBS Performance Targets
+- No additional encoding latency in OBS pipeline
+- Supports OBS recording at full 60fps
+- Compatible with OBS streaming at full bitrate
+- Minimal CPU overhead to leave resources for OBS encoding
+
+## Security & Privacy
+
+### Security Measures
+- Local network only (no cloud/internet routing)
+- Optional PIN code pairing
+- Encrypted communication (TLS)
+- Automatic device timeout after inactivity
+- No video recording or storage by default
+
+### Privacy Features
+- Clear indicator when camera is active
+- One-tap disconnect on phone
+- Notification when streaming starts
+- Explicit permission requirements
+
+## User Flows
+
+### First-Time Setup Flow
+
+1. **Mac App**:
+   - Download and install Mac app
+   - Grant system extension permission
+   - Grant network permission
+   - Launch app from menu bar
+
+2. **Android App**:
+   - Install from Google Play Store
+   - Grant camera and network permissions
+   - Connect to same WiFi as Mac
+
+3. **Pairing**:
+   - Open Android app
+   - See Mac listed in available devices
+   - Tap to connect
+   - Mac app shows confirmation
+   - Connection established
+
+### Regular Usage Flow
+
+**USB Connection (Recommended for OBS):**
+1. Connect Android phone to Mac via USB cable
+2. Enable USB debugging on phone (one-time setup)
+3. Mac app auto-detects phone connection
+4. Open Android app (or auto-launches)
+5. Camera stream starts automatically via USB
+6. Open OBS Studio on Mac
+7. Add "Video Capture Device" source
+8. Select "[Your App Name] Camera"
+9. Phone camera feed appears in OBS at 1080p/60fps
+10. Configure and start streaming/recording
+
+**WiFi Connection (Wireless convenience):**
+1. Ensure phone and Mac on same WiFi
+2. Open Android app
+3. Tap connected Mac device
+4. Camera stream starts automatically
+5. Open OBS and select camera source
+
+## Success Metrics
+
+### Key Performance Indicators
+- Connection success rate: >98% (USB should be near 100%)
+- Average latency: 
+  - USB: <20ms
+  - WiFi: <75ms
+- Frame drops: <0.1% at 1080p/60fps
+- App crash rate: <0.1%
+- User rating: >4.5 stars
+- OBS compatibility: 100%
+
+### User Engagement Metrics
+- Daily active users
+- Average session duration
+- Reconnection frequency
+- Feature usage statistics
+
+## Future Enhancements (Post-MVP)
+
+### Phase 2 Features
+- Audio streaming from phone microphone
+- Multiple camera support (connect multiple phones)
+- Green screen/background removal
+- Beauty filters and effects
+- Recording functionality
+
+### Phase 3 Features
+- Windows support
+- iOS support
+- USB connection mode
+- Cloud-based connection (for different networks)
+- Touch gestures to control Mac apps
+
+### Advanced Features
+- Zoom/pan/tilt controls from Mac
+- Automatic lighting adjustment
+- Multiple camera angles switching
+- OBS Studio integration
+- NDI protocol support
+
+## Development Phases
+
+### Phase 1: Core Functionality (Weeks 1-4)
+- USB connection implementation (priority)
+- Basic Android camera capture at 1080p/60fps
+- Basic Mac video reception and virtual camera
+- WiFi discovery as backup connection
+- OBS compatibility testing
+
+### Phase 2: Polish & Optimization (Weeks 5-6)
+- UI/UX refinement
+- Performance optimization for 60fps streaming
+- Connection stability improvements (especially USB)
+- Error handling
+- Latency optimization for OBS use case
+
+### Phase 3: Testing & Launch (Weeks 7-8)
+- Beta testing program (focus on OBS users)
+- Bug fixes
+- Documentation (including OBS setup guide)
+- Store submission (Google Play, website distribution for Mac)
+
+## Technical Challenges & Solutions
+
+### Challenge 1: USB Connection Stability
+**Problem**: USB connections can be interrupted, ADB setup complexity
+**Solution**: Robust USB device detection, clear user instructions for USB debugging setup, automatic reconnection on cable issues
+
+### Challenge 2: Virtual Camera Driver on macOS
+**Problem**: macOS security restrictions on system extensions
+**Solution**: Use CoreMediaIO DAL plugin, properly signed with Apple Developer certificate
+
+### Challenge 3: 60fps Performance
+**Problem**: High frame rate requires significant processing power and can cause overheating
+**Solution**: Hardware encoder optimization on Android, efficient decoding on Mac, temperature monitoring with quality fallback
+
+### Challenge 4: USB vs WiFi Architecture
+**Problem**: Two completely different data transport mechanisms
+**Solution**: Abstracted transport layer with common video pipeline, automatic connection type detection
+
+### Challenge 5: OBS Integration Quality
+**Problem**: Maintaining video quality through entire pipeline to OBS
+**Solution**: Minimal compression, proper color space support, consistent frame timing, no additional processing overhead
+
+## Documentation Requirements
+
+### User Documentation
+- Quick start guide (separate USB and WiFi sections)
+- USB debugging setup instructions
+- OBS Studio setup guide
+- Troubleshooting guide (connection issues, latency problems)
+- FAQ
+- Video tutorials (OBS integration walkthrough)
+
+### Developer Documentation
+- Architecture overview
+- API specifications
+- Protocol documentation
+- Build instructions
+- Testing procedures
+
+## App Store Requirements
+
+### Google Play Store (Android)
+- Privacy policy
+- Store listing (descriptions, screenshots)
+- Content rating
+- Data safety section
+
+### Mac Distribution
+- Notarized app bundle
+- Direct download from website
+- Installer package (.pkg or .dmg)
+- Update mechanism
+
+## Support & Maintenance
+
+### Support Channels
+- In-app help documentation
+- Email support
+- Bug reporting system
+- Community forum (optional)
+
+### Update Strategy
+- Regular security updates
+- OS compatibility updates
+- Feature updates based on user feedback
+- Bug fix releases within 48 hours for critical issues
+
+## Competitive Analysis
+
+### Key Competitors
+- **Camo**: Feature-rich, paid subscription
+- **Iriun**: Free with ads, paid pro version
+- **DroidCam**: Established, cross-platform
+- **EpocCam**: Popular, Elgato integration
+
+### Differentiation Strategy
+- **USB-first approach**: Most competitors focus on WiFi only
+- Superior connection stability with wired option
+- Lower latency optimized for streaming/recording
+- **OBS-optimized**: Specifically designed for content creators
+- True 60fps support at 1080p
+- Better performance optimization
+- Cleaner UI/UX
+- Competitive/free pricing
+
+## Business Model (Optional)
+
+### Monetization Options
+1. **Free with Premium**: Basic features free, advanced features paid
+2. **One-time Purchase**: Single payment for both apps
+3. **Freemium**: Free with ads, paid to remove
+4. **Free & Open Source**: Community-driven
+
+## Appendix
+
+### Glossary
+- **Virtual Camera**: Software-based camera device that appears as hardware to applications
+- **mDNS**: Multicast DNS for local network device discovery
+- **DAL**: Device Abstraction Layer for macOS camera plugins
+- **Latency**: Time delay between camera capture and display on Mac
+
+### References
+- Apple CoreMediaIO Documentation
+- Android Camera2 API Guide
+- WebRTC Best Practices for Low Latency
+- Network Streaming Protocols Comparison
+
+---
+
+**Document Version**: 1.0  
+**Last Updated**: February 19, 2026  
+**Status**: Ready for Development
