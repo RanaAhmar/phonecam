@@ -11,7 +11,9 @@ on:
 jobs:
   build:
     name: Build Mac DMG
-    runs-on: macos-14  # Apple Silicon (M1) runner
+    runs-on: macos-14
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
