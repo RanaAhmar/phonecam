@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+  <!-- Phone body -->
+  <path
+      android:fillColor="#6C63FF"
+      android:pathData="M24,8 L56,8 Q60,8 60,12 L60,68 Q60,72 56,72 L24,72 Q20,72 20,68 L20,12 Q20,8 24,8 Z"/>
+  <!-- Camera lens -->
+  <path
+      android:fillColor="#FFFFFF"
+      android:pathData="M40,20 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0"/>
+  <!-- Screen -->
+  <path
+      android:fillColor="#E8E4FF"
+      android:pathData="M24,32 L56,32 L56,60 L24,60 Z"/>
+</vector>
