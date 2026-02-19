@@ -1,4 +1,4 @@
-# Droid Camera — Streaming Protocol Specification
+# PhoneCam Streaming Protocol Specification
 
 ## Overview
 
@@ -7,8 +7,6 @@ Both USB and WiFi transports use the same binary framing protocol. The only diff
 - **Port**: `7878` (TCP)
 - **Discovery UDP broadcast**: `7879`
 - **Encoding**: H.264 (Baseline/Main profile)
-
----
 
 ## Packet Frame Structure
 
@@ -23,35 +21,31 @@ Every packet sent over the wire uses this structure:
 
 Total header size: **22 bytes**
 
-| Field       | Size     | Type       | Description                          |
-|-------------|----------|------------|--------------------------------------|
-| Magic       | 5 bytes  | ASCII      | Always `44 52 4F 49 44` ("DROID")   |
-| Type        | 1 byte   | uint8      | Frame type (see below)               |
-| SeqNum      | 4 bytes  | uint32 BE  | Monotonically increasing sequence    |
-| Timestamp   | 8 bytes  | int64 BE   | Microseconds since Unix epoch        |
-| PayloadLen  | 4 bytes  | uint32 BE  | Length of payload in bytes           |
-| Payload     | N bytes  | bytes      | Type-specific payload                |
-
----
+| Field | Size | Type | Description |
+|-------|------|------|-------------|
+| Magic | 5 bytes | ASCII | Always `44 52 4F 49 44` ("DROID") |
+| Type | 1 byte | uint8 | Frame type (see below) |
+| SeqNum | 4 bytes | uint32 BE | Monotonically increasing sequence |
+| Timestamp | 8 bytes | int64 BE | Microseconds since Unix epoch |
+| PayloadLen | 4 bytes | uint32 BE | Length of payload in bytes |
+| Payload | N bytes | bytes | Type-specific payload |
 
 ## Frame Types
 
-| Value | Name       | Direction        | Description                          |
-|-------|------------|------------------|--------------------------------------|
-| 0x01  | HELLO      | Android → Mac    | Initial handshake / capability info  |
-| 0x02  | HELLO_ACK  | Mac → Android    | Handshake acknowledgment             |
-| 0x03  | SETTINGS   | Mac → Android    | Request resolution/fps change        |
-| 0x04  | SETTINGS_ACK | Android → Mac  | Settings applied confirmation        |
-| 0x10  | VIDEO      | Android → Mac    | H.264 NAL unit(s)                    |
-| 0x20  | PING       | Either direction | Keepalive ping                       |
-| 0x21  | PONG       | Either direction | Keepalive pong                       |
-| 0xFF  | DISCONNECT | Either direction | Graceful disconnect notification     |
-
----
+| Value | Name | Direction | Description |
+|-------|------|-----------|-------------|
+| 0x01 | HELLO | Android to Mac | Initial handshake and capability info |
+| 0x02 | HELLO_ACK | Mac to Android | Handshake acknowledgment |
+| 0x03 | SETTINGS | Mac to Android | Request resolution/fps change |
+| 0x04 | SETTINGS_ACK | Android to Mac | Settings applied confirmation |
+| 0x10 | VIDEO | Android to Mac | H.264 NAL unit(s) |
+| 0x20 | PING | Either direction | Keepalive ping |
+| 0x21 | PONG | Either direction | Keepalive pong |
+| 0xFF | DISCONNECT | Either direction | Graceful disconnect notification |
 
 ## Payload Formats
 
-### HELLO (0x01) — Android → Mac
+### HELLO (0x01) from Android to Mac
 
 JSON-encoded UTF-8 string:
 
@@ -69,7 +63,7 @@ JSON-encoded UTF-8 string:
 }
 ```
 
-### HELLO_ACK (0x02) — Mac → Android
+### HELLO_ACK (0x02) from Mac to Android
 
 JSON-encoded UTF-8 string:
 
@@ -82,7 +76,7 @@ JSON-encoded UTF-8 string:
 }
 ```
 
-### SETTINGS (0x03) — Mac → Android
+### SETTINGS (0x03) from Mac to Android
 
 JSON-encoded UTF-8 string:
 
@@ -94,21 +88,19 @@ JSON-encoded UTF-8 string:
 }
 ```
 
-### VIDEO (0x10) — Android → Mac
+### VIDEO (0x10) from Android to Mac
 
 Raw H.264 NAL unit bytes. May contain one or more NAL units concatenated with Annex B start codes (`00 00 00 01`).
 
-The first VIDEO frame after connection MUST include SPS and PPS NAL units.
+The first VIDEO frame after connection must include SPS and PPS NAL units.
 
-### PING / PONG (0x20 / 0x21)
+### PING and PONG (0x20 and 0x21)
 
-Empty payload (PayloadLen = 0). Sent every 2 seconds. If no PONG received within 5 seconds, connection is considered lost.
+Empty payload (PayloadLen = 0). Sent every 2 seconds. If no PONG is received within 5 seconds, the connection is considered lost.
 
 ### DISCONNECT (0xFF)
 
-Empty payload. Sent before intentional disconnect.
-
----
+Empty payload. Sent before an intentional disconnect.
 
 ## Connection Sequence
 
@@ -137,8 +129,6 @@ Android                              Mac
    |--------------------------------->|
 ```
 
----
-
 ## USB Mode
 
 In USB mode, the Mac runs:
@@ -146,9 +136,7 @@ In USB mode, the Mac runs:
 adb forward tcp:7878 tcp:7878
 ```
 
-This tunnels the Mac's local port `7878` to the Android device's port `7878`. The Android app listens on port `7878` in server mode. The Mac then connects to `localhost:7878` — identical to WiFi mode from the protocol perspective.
-
----
+This tunnels the Mac's local port `7878` to the Android device's port `7878`. The Android app listens on port `7878` in server mode. The Mac then connects to `localhost:7878` which is identical to WiFi mode from the protocol perspective.
 
 ## WiFi Discovery (UDP)
 
@@ -156,7 +144,7 @@ Android broadcasts a UDP packet on port `7879` every 2 seconds:
 
 ```json
 {
-  "service": "droidcam",
+  "service": "phonecam",
   "version": 1,
   "device": "Pixel 7 Pro",
   "port": 7878,
@@ -164,11 +152,8 @@ Android broadcasts a UDP packet on port `7879` every 2 seconds:
 }
 ```
 
-Mac listens on UDP port `7879` and populates the device list. mDNS (`_droidcam._tcp`) is used as the primary discovery mechanism; UDP broadcast is the fallback.
-
----
+The Mac listens on UDP port `7879` and populates the device list. mDNS (`_phonecam._tcp`) is used as the primary discovery mechanism and UDP broadcast is the fallback.
 
 ## Security
 
-- Optional PIN pairing: After HELLO_ACK, if PIN is configured, Mac sends a `CHALLENGE` and Android must respond with the correct PIN hash.
-- TLS: Both sides support optional TLS wrapping of the TCP connection (self-signed certificate generated on first launch).
+PIN pairing is optional. After HELLO_ACK, if a PIN is configured, the Mac sends a CHALLENGE and the Android device must respond with the correct PIN hash. TLS is also optional. Both sides support TLS wrapping of the TCP connection using a self-signed certificate generated on first launch.
