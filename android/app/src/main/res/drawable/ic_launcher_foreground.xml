@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Phone body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,20 L70,20 Q74,20 74,24 L74,84 Q74,88 70,88 L38,88 Q34,88 34,84 L34,24 Q34,20 38,20 Z"/>
+    <!-- Camera lens -->
+    <path
+        android:fillColor="#6C63FF"
+        android:pathData="M54,30 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0"/>
+    <!-- Screen -->
+    <path
+        android:fillColor="#E8E8FF"
+        android:pathData="M38,46 L70,46 L70,78 L38,78 Z"/>
+    <!-- WiFi signal bars in screen -->
+    <path
+        android:fillColor="#6C63FF"
+        android:pathData="M50,68 L58,68 L58,74 L50,74 Z"/>
+    <path
+        android:fillColor="#6C63FF"
+        android:pathData="M44,62 L48,62 L48,74 L44,74 Z"/>
+    <path
+        android:fillColor="#6C63FF"
+        android:pathData="M60,62 L64,62 L64,74 L60,74 Z"/>
+</vector>

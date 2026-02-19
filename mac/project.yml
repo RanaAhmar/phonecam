@@ -30,8 +30,6 @@ targets:
         NSBonjourServices:
           - _phonecam._tcp
         NSPrincipalClass: NSApplication
-        NSSupportsAutomaticTermination: false
-        NSSupportsSuddenTermination: false
     entitlements:
       path: DroidCam/DroidCam.entitlements
     settings:
@@ -39,20 +37,13 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.phonecam.app
       SWIFT_VERSION: "5.9"
       MACOSX_DEPLOYMENT_TARGET: "12.3"
-      CODE_SIGN_STYLE: Automatic
-      ENABLE_HARDENED_RUNTIME: YES
+      CODE_SIGN_STYLE: Manual
+      ENABLE_HARDENED_RUNTIME: NO
     dependencies:
-      - framework: CoreMediaIO.framework
-        weak: false
-      - framework: CoreMedia.framework
-        weak: false
-      - framework: CoreVideo.framework
-        weak: false
-      - framework: VideoToolbox.framework
-        weak: false
-      - framework: AVFoundation.framework
-        weak: false
-      - framework: IOKit.framework
-        weak: false
-      - framework: Network.framework
-        weak: false
+      - sdk: CoreMediaIO.framework
+      - sdk: CoreMedia.framework
+      - sdk: CoreVideo.framework
+      - sdk: VideoToolbox.framework
+      - sdk: AVFoundation.framework
+      - sdk: IOKit.framework
+      - sdk: Network.framework
