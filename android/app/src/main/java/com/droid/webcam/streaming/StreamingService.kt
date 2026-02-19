@@ -90,7 +90,7 @@ class StreamingService : Service(), FrameCallback {
                 updateNotification("Ready to stream")
                 statusListener?.onConnectionChanged(ConnectionMode.NONE, null)
                 // Auto-restart server to accept new connections
-                wifiStreamer?.startServer()
+                serviceScope.launch { wifiStreamer?.startServer() }
             },
             onError = { msg ->
                 Log.e(TAG, "WiFi error: $msg")
@@ -119,7 +119,7 @@ class StreamingService : Service(), FrameCallback {
                 isStreaming = false
                 updateNotification("Ready to stream")
                 statusListener?.onConnectionChanged(ConnectionMode.NONE, null)
-                usbStreamer?.startServer()
+                serviceScope.launch { usbStreamer?.startServer() }
             },
             onError = { msg ->
                 Log.e(TAG, "USB error: $msg")
